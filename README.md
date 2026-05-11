@@ -65,104 +65,37 @@ BudgetDesk/
 │   └── date_utils.py
 │
 └── assets/
+```
 
-Funcionalidades
+# Funcionalidades:
 Registro de Gastos
 
 Permite registrar:
-
-Monto
-Categoría
-Fecha
-Descripción
-Método de pago
-Gestión de Categorías
+- Monto
+- Categoría
+- Fecha
+- Descripción
+- Método de pago
+- Gestión de Categorías
 
 Los usuarios pueden:
-
-Crear categorías
-Editar categorías
-Eliminar categorías
-Visualización de Datos
+- Crear categorías
+- Editar categorías
+- Eliminar categorías
+- Visualización de Datos
 
 La aplicación incorpora:
-
-Tabla de gastos
-Filtros de búsqueda
-Historial de movimientos
-Estadísticas y Resúmenes
+- Tabla de gastos
+- Filtros de búsqueda
+- Historial de movimientos
+- Estadísticas y Resúmenes
 
 Incluye gráficos y resúmenes financieros:
-
-Distribución de gastos por categoría
-Totales mensuales
-Pie charts
-Bar charts
-Exportación a Excel
-
-Permite exportar reportes .xlsx utilizando:
-
-Pandas
-OpenPyXL
-Instalación
-Requisitos
-Python 3.10+
-pip
-Clonar repositorio
-git clone https://github.com/Soofiaa/BudgetDesk.git
-cd BudgetDesk
-Crear entorno virtual
-python -m venv venv
-Windows
-venv\Scripts\activate
-Instalar dependencias
-pip install -r requirements.txt
-Ejecutar aplicación
-python main.py
-Generar Ejecutable
-pyinstaller main.spec
-
-El ejecutable se generará en:
-
-dist/BudgetDesk/
-Generar Instalador
-
-El proyecto utiliza Inno Setup para crear el instalador de Windows.
-
-Archivo utilizado:
-
-installer.iss
-
-Compilar el script generará:
-
-BudgetDesk_Setup.exe
-Capturas de Pantalla
-Pantalla Principal
-
-Agregar screenshot aquí
-
-Tabla de Gastos
-
-Agregar screenshot aquí
-
-Resumen Estadístico
-
-Agregar screenshot aquí
-
-Estado del Proyecto
-
-Proyecto funcional y en fase de distribución.
-
-Próximas mejoras:
-
-Backups automáticos.
-Dashboard avanzado.
-Presupuestos mensuales.
-Alertas financieras.
-Optimización de consultas SQLite.
-Objetivo del Proyecto
-
-El objetivo de BudgetDesk es proporcionar una solución simple, rápida y visual para el control financiero personal, utilizando tecnologías modernas del ecosistema Python y buenas prácticas de desarrollo modular.
+- Distribución de gastos por categoría
+- Totales mensuales
+- Pie charts
+- Bar charts
+- Exportación a Excel
 
 Autor: Sofía Menzel
 GitHub: https://github.com/Soofiaa
