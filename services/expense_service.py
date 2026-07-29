@@ -11,6 +11,7 @@ import pandas as pd
 
 from database import fetch_filtered_expenses
 from models.expense import Expense
+from utils.formatting import parse_clp_amount
 
 PAYMENT_METHODS = ["debit", "bank_transfer", "credit_card"]
 PAYMENT_LABELS = {
@@ -40,7 +41,7 @@ def validate_expense(
     if not amount_str.strip():
         return False, "El monto es requerido."
     try:
-        amount = float(amount_str.replace(",", "."))
+        amount = parse_clp_amount(amount_str)
         if amount <= 0:
             return False, "El monto debe ser mayor a cero."
     except ValueError:

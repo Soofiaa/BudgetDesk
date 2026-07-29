@@ -11,7 +11,7 @@ import customtkinter as ctk
 from database import insert_expense, update_expense, fetch_category_names
 from models.expense import Expense
 from services import validate_expense, PAYMENT_METHODS, PAYMENT_DISPLAY_NAMES, PAYMENT_DISPLAY_TO_METHOD, PAYMENT_METHOD_TO_DISPLAY
-from utils import date_to_display, date_to_db
+from utils import date_to_display, date_to_db, parse_clp_amount
 from ui import styles as s
 
 
@@ -178,7 +178,7 @@ class AddExpenseFrame(ctk.CTkFrame):
 
         expense = Expense(
             id=self._editing_expense.id if self._editing_expense else None,
-            amount=float(amount_str.replace(".", "").replace(",", ".")),
+            amount=parse_clp_amount(amount_str),
             description=description,
             date=date_to_db(date_display),
             category=category,

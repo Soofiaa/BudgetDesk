@@ -10,6 +10,15 @@ def format_clp(amount: float) -> str:
     return "$" + f"{int(round(amount)):,}".replace(",", ".")
 
 
+def parse_clp_amount(raw: str) -> float:
+    """Parsea un monto en formato chileno (punto=miles, coma=decimal) a float.
+
+    Ej: "15.000,50" -> 15000.5. Lanza ValueError si no es parseable.
+    """
+    cleaned = raw.strip().replace(".", "").replace(",", ".")
+    return float(cleaned)
+
+
 def date_to_display(date_str: str) -> str:
     """Convierte YYYY-MM-DD (formato BD) a DD/MM/YYYY (formato visual)."""
     try:
