@@ -40,31 +40,39 @@ La aplicación permite registrar gastos, organizarlos por categorías, visualiza
 BudgetDesk/
 │
 ├── main.py
+├── build_exe.ps1
+├── installer_config.iss
+├── requirements.txt
+├── README.md
+│
 ├── database/
-│   ├── database.py
+│   ├── __init__.py
+│   ├── db_manager.py
 │   ├── categories_dao.py
 │   └── expenses_dao.py
 │
 ├── models/
+│   ├── __init__.py
 │   ├── expense.py
 │   └── category.py
 │
 ├── services/
+│   ├── __init__.py
 │   ├── expense_service.py
 │   └── export_service.py
 │
 ├── ui/
+│   ├── __init__.py
 │   ├── app.py
 │   ├── add_expense_frame.py
 │   ├── expenses_table_frame.py
 │   ├── summary_frame.py
-│   └── categories_frame.py
+│   ├── categories_frame.py
+│   └── styles.py
 │
-├── utils/
-│   ├── currency_utils.py
-│   └── date_utils.py
-│
-└── assets/
+└── utils/
+    ├── __init__.py
+    └── formatting.py
 ```
 
 # Funcionalidades:
