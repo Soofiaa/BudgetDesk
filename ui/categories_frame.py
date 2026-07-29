@@ -7,7 +7,13 @@ from __future__ import annotations
 import tkinter as tk
 import customtkinter as ctk
 
-from database import fetch_all_categories, insert_category, delete_category
+from database import (
+    fetch_all_categories,
+    insert_category,
+    delete_category,
+    count_expenses_by_category,
+    reassign_expenses_category,
+)
 from ui import styles as s
 
 
@@ -145,7 +151,103 @@ class CategoriesFrame(ctk.CTkFrame):
             self._error_label.configure(text=str(exc))
 
     def _delete_category(self, cat):
-        delete_category(cat.id)
+        count = count_expenses_by_category(cat.name)
+
+        if count == 0:
+            dialog = ctk.CTkInputDialog(
+                text=f'Escribe "sí" para confirmar la eliminación de la categoría:\n"{cat.name}"',
+                title="Confirmar Eliminación",
+            )
+            answer = dialog.get_input()
+            if answer and answer.strip().lower() in ("sí", "si"):
+                delete_category(cat.id)
+                self._finish_change()
+            return
+
+        other_names = [c.name for c in fetch_all_categories() if c.id != cat.id]
+        if not other_names:
+            self._show_no_alternative_dialog(cat, count)
+        else:
+            self._show_reassign_dialog(cat, count, other_names)
+
+    def _finish_change(self):
         self.refresh()
         if self._on_change:
             self._on_change()
+
+    def _show_reassign_dialog(self, cat, count, other_names):
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Reasignar Gastos")
+        dialog.geometry("420x220")
+        dialog.transient(self)
+        dialog.grab_set()
+        dialog.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(
+            dialog,
+            text=(
+                f'{count} gasto(s) usan la categoría "{cat.name}".\n'
+                "Elige a qué categoría reasignarlos, o cancela."
+            ),
+            font=s.FONT_MD,
+            text_color=s.COLOR_TEXT,
+            wraplength=380,
+            justify="left",
+        ).grid(row=0, column=0, sticky="w", padx=s.PAD_MD, pady=(s.PAD_MD, s.PAD_SM))
+
+        target_var = tk.StringVar(value=other_names[0])
+        ctk.CTkComboBox(
+            dialog,
+            variable=target_var,
+            values=other_names,
+            state="readonly",
+            font=s.FONT_MD,
+        ).grid(row=1, column=0, sticky="ew", padx=s.PAD_MD, pady=(0, s.PAD_MD))
+
+        btn_row = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_row.grid(row=2, column=0, sticky="e", padx=s.PAD_MD, pady=(0, s.PAD_MD))
+
+        def _confirm():
+            reassign_expenses_category(cat.name, target_var.get())
+            delete_category(cat.id)
+            dialog.destroy()
+            self._finish_change()
+
+        ctk.CTkButton(
+            btn_row, text="Cancelar", width=100, font=s.FONT_MD,
+            fg_color=s.COLOR_BORDER, hover_color=s.COLOR_CARD_HOVER,
+            command=dialog.destroy,
+        ).grid(row=0, column=0, padx=(0, s.PAD_SM))
+
+        ctk.CTkButton(
+            btn_row, text="Reasignar y Eliminar", width=170, font=s.FONT_MD,
+            fg_color=s.COLOR_DANGER, hover_color=s.COLOR_DANGER_HOVER,
+            command=_confirm,
+        ).grid(row=0, column=1)
+
+    def _show_no_alternative_dialog(self, cat, count):
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("No se puede eliminar")
+        dialog.geometry("380x180")
+        dialog.transient(self)
+        dialog.grab_set()
+        dialog.grid_columnconfigure(0, weight=1)
+
+        ctk.CTkLabel(
+            dialog,
+            text=(
+                f'No se puede eliminar "{cat.name}": {count} gasto(s) la usan '
+                "y es la única categoría disponible para reasignarlos.\n\n"
+                "Crea otra categoría primero."
+            ),
+            font=s.FONT_MD,
+            text_color=s.COLOR_TEXT,
+            wraplength=340,
+            justify="left",
+        ).grid(row=0, column=0, sticky="w", padx=s.PAD_MD, pady=s.PAD_MD)
+
+        ctk.CTkButton(
+            dialog, text="Entendido", font=s.FONT_MD,
+            fg_color=s.COLOR_ACCENT, hover_color=s.COLOR_ACCENT_HOVER,
+            command=dialog.destroy,
+        ).grid(row=1, column=0, pady=(0, s.PAD_MD))

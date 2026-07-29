@@ -60,6 +60,25 @@ def delete(expense_id: int) -> None:
         conn.commit()
 
 
+def count_by_category(category: str) -> int:
+    """Return how many expenses currently use the given category."""
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT COUNT(*) FROM expenses WHERE category = ?", (category,)
+        ).fetchone()
+    return row[0]
+
+
+def reassign_category(old_category: str, new_category: str) -> None:
+    """Reassign all expenses from old_category to new_category."""
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE expenses SET category = ? WHERE category = ?",
+            (new_category, old_category),
+        )
+        conn.commit()
+
+
 def fetch_all() -> list[Expense]:
     """Return all expenses ordered by date descending."""
     with get_connection() as conn:

@@ -5,6 +5,8 @@ from .expenses_dao import (
     delete as delete_expense,
     fetch_all as fetch_all_expenses,
     fetch_filtered as fetch_filtered_expenses,
+    count_by_category as count_expenses_by_category,
+    reassign_category as reassign_expenses_category,
 )
 from .categories_dao import (
     fetch_all as fetch_all_categories,
@@ -21,6 +23,8 @@ __all__ = [
     "delete_expense",
     "fetch_all_expenses",
     "fetch_filtered_expenses",
+    "count_expenses_by_category",
+    "reassign_expenses_category",
     "fetch_all_categories",
     "fetch_category_names",
     "insert_category",
