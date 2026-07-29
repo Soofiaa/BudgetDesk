@@ -1,40 +1,39 @@
 # BudgetDesk
 
-BudgetDesk es una aplicación de escritorio desarrollada en Python para la gestión y análisis de gastos personales mensuales.  
-La aplicación permite registrar gastos, organizarlos por categorías, visualizar estadísticas financieras y exportar reportes en Excel mediante una interfaz moderna y fácil de utilizar.
+Aplicación de escritorio en Python para el registro, análisis y control de gastos personales mensuales. Permite clasificar gastos por categoría y método de pago, visualizar resúmenes estadísticos y exportar reportes formateados a Excel.
 
 ---
 
-# Características Principales
+## Características Principales
 
-- Registro de gastos personales.
-- Gestión de categorías personalizadas.
-- Clasificación por método de pago.
-- Visualización de gastos en tablas interactivas.
-- Resúmenes y gráficos estadísticos.
-- Exportación de reportes en Excel.
-- Base de datos local SQLite.
-- Interfaz moderna desarrollada con CustomTkinter.
-- Instalador profesional para Windows.
+- Registro de gastos con monto, categoría, fecha, descripción, método de pago y notas.
+- Gestión de categorías personalizadas, con protección contra pérdida de datos al eliminar una categoría en uso.
+- Filtros de búsqueda por mes, categoría y método de pago.
+- Resúmenes y gráficos estadísticos (por categoría, por método de pago, totales mensuales).
+- Exportación de reportes a Excel con formato profesional (OpenPyXL).
+- Persistencia local en SQLite.
+- Interfaz moderna con CustomTkinter.
+- Instalador para Windows generado con PyInstaller + Inno Setup.
 
 ---
 
-# Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 | Tecnología | Uso |
 |---|---|
 | Python 3.x | Lenguaje principal |
 | CustomTkinter | Interfaz gráfica |
 | SQLite | Persistencia de datos |
-| Pandas | Manipulación de datos |
+| Pandas | Manipulación y agregación de datos |
 | Matplotlib | Generación de gráficos |
 | OpenPyXL | Exportación a Excel |
+| pytest | Suite de tests automatizados |
 | PyInstaller | Generación de ejecutable |
 | Inno Setup | Creación del instalador |
 
 ---
 
-# Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 ```plaintext
 BudgetDesk/
@@ -79,42 +78,66 @@ BudgetDesk/
     └── test_formatting.py
 ```
 
+Separación en capas: `database/` (acceso a datos), `models/` (entidades), `services/` (lógica de negocio y agregación), `ui/` (interfaz), `utils/` (funciones auxiliares).
+
 ---
 
-# Tests
+## Instalación y Ejecución (desde código fuente)
 
-`pip install -r requirements-dev.txt && pytest tests/`
+```bash
+git clone https://github.com/Soofiaa/BudgetDesk.git
+cd BudgetDesk
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+pip install -r requirements.txt
+python main.py
+```
 
-# Funcionalidades:
-Registro de Gastos
+La base de datos SQLite se crea automáticamente en `~/.budgetdesk/expenses.db` la primera vez que se ejecuta la aplicación.
 
-Permite registrar:
-- Monto
-- Categoría
-- Fecha
-- Descripción
-- Método de pago
-- Gestión de Categorías
+### Instalador para Windows
 
-Los usuarios pueden:
-- Crear categorías
-- Editar categorías
-- Eliminar categorías
-- Visualización de Datos
+También está disponible un instalador `.exe` listo para usar en la sección [Releases](../../releases) del repositorio — no requiere Python instalado.
 
-La aplicación incorpora:
-- Tabla de gastos
-- Filtros de búsqueda
-- Historial de movimientos
-- Estadísticas y Resúmenes
+---
 
-Incluye gráficos y resúmenes financieros:
-- Distribución de gastos por categoría
-- Totales mensuales
-- Pie charts
-- Bar charts
-- Exportación a Excel
+## Tests
 
-Autor: Sofía Menzel
+```bash
+pip install -r requirements-dev.txt
+pytest tests/
+```
+
+Cobertura actual: parseo de montos en formato chileno (separador de miles y decimales), incluyendo casos límite y de entrada inválida.
+
+---
+
+## Notas de Diseño
+
+Algunas decisiones tomadas deliberadamente durante el desarrollo, pensando en la integridad de los datos del usuario:
+
+- **Las categorías no se pueden eliminar "a ciegas"**: si una categoría tiene gastos asociados, la aplicación exige reasignarlos a otra categoría existente antes de permitir el borrado, evitando registros huérfanos que romperían los resúmenes y filtros.
+- **Nombres de categoría insensibles a mayúsculas** al validar duplicados (`"Comida"` y `"comida"` se tratan como la misma categoría), para evitar inconsistencias por error de tipeo del usuario.
+- **Separación DAO / servicio / UI**: la lógica de acceso a datos, las reglas de negocio (validación, agregación con Pandas) y la interfaz están desacopladas, lo que facilita testear la lógica sin depender de la UI.
+
+---
+
+## Funcionalidades
+
+**Registro de Gastos** — monto, categoría, fecha, descripción, método de pago y notas opcionales.
+
+**Gestión de Categorías** — creación, listado y eliminación protegida (ver Notas de Diseño).
+
+**Visualización y Filtros** — tabla de gastos con filtros combinables por mes, categoría y método de pago.
+
+**Estadísticas y Resúmenes** — totales mensuales, distribución por categoría y por método de pago, gráficos de torta y de barras.
+
+**Exportación** — reportes a Excel con formato (encabezados, totales, colores alternados por fila).
+
+---
+
+## Autor
+
+Sofía Menzel
 GitHub: https://github.com/Soofiaa
 LinkedIn: https://www.linkedin.com/in/sofia-menzel-madrid/
