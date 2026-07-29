@@ -1,5 +1,6 @@
 # Build artifacts
 *.exe
+*.spec
 
 # Python
 __pycache__/
