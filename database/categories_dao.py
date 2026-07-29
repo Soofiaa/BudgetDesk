@@ -23,19 +23,21 @@ def fetch_names() -> list[str]:
 
 
 def insert(name: str) -> Category:
-    """Insert a new category and return it. Raises ValueError if name exists."""
+    """Insert a new category and return it. Raises ValueError if name exists (case-insensitive)."""
     name = name.strip()
     if not name:
         raise ValueError("El nombre de la categoría no puede estar vacío.")
     with get_connection() as conn:
-        try:
-            cursor = conn.execute(
-                "INSERT INTO categories (name) VALUES (?)", (name,)
-            )
-            conn.commit()
-            return Category(id=cursor.lastrowid, name=name)
-        except Exception as exc:
-            raise ValueError(f"La categoría '{name}' ya existe.") from exc
+        existing = conn.execute(
+            "SELECT 1 FROM categories WHERE LOWER(name) = LOWER(?)", (name,)
+        ).fetchone()
+        if existing:
+            raise ValueError(f"La categoría '{name}' ya existe.")
+        cursor = conn.execute(
+            "INSERT INTO categories (name) VALUES (?)", (name,)
+        )
+        conn.commit()
+        return Category(id=cursor.lastrowid, name=name)
 
 
 def delete(category_id: int) -> None:
