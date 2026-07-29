@@ -43,6 +43,7 @@ BudgetDesk/
 ├── build_exe.ps1
 ├── installer_config.iss
 ├── requirements.txt
+├── requirements-dev.txt
 ├── README.md
 │
 ├── database/
@@ -70,10 +71,19 @@ BudgetDesk/
 │   ├── categories_frame.py
 │   └── styles.py
 │
-└── utils/
-    ├── __init__.py
-    └── formatting.py
+├── utils/
+│   ├── __init__.py
+│   └── formatting.py
+│
+└── tests/
+    └── test_formatting.py
 ```
+
+---
+
+# Tests
+
+`pip install -r requirements-dev.txt && pytest tests/`
 
 # Funcionalidades:
 Registro de Gastos
